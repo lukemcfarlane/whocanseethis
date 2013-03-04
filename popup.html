@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<script>
+			var currentTabUrl = '';
+			var currentEnvironment = '';
+			
+			chrome.tabs.getSelected(null, function(tab) {
+			    //currentTabUrl = tab.url;
+				updateCurrentTabUrl(tab);
+			});
+			
+			chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
+				chrome.tabs.get(tabId, updateCurrentTabUrl);
+			});
+			
+			function updateCurrentTabUrl(tab) {
+				console.log('updateCurrentTabUrl called with tab:')
+				console.log(tab);
+				currentTabUrl = tab.url;
+				console.log('url is ' + currentTabUrl);
+				if(currentTabUrl.indexOf('salesforce.com') == -1 && currentTabUrl.indexOf('visual.force.com') == -1) { // not Salesforce
+					currentEnvironment = 'Not Salesforce';
+				} else if(currentTabUrl.indexOf('cs') != -1) { // sandbox
+					console.log('sandbox');
+					currentEnvironment = 'Sandbox';
+				} else if(currentTabUrl.indexOf('na') != -1 || currentTabUrl.indexOf('ap') != -1 || currentTabUrl.indexOf('eu') != -1) { // prod
+					console.log('production');
+					currentEnvironment = 'Production';
+				} else {
+					currentEnvironment = '';
+				}
+				setTimeout(function() { document.getElementById('environment').innerHTML = currentEnvironment; }, 100);
+			}
+			
+		</script>
+	</head>
+	<body style="font: arial;">
+		<b>Trineo Salesforce Environment Indicator 1.0</b>
+		<br/>
+		<br/>
+		<b>Current environment:</b> <span id="environment"></span>
+		<br/>
+		<br/>
+		By Luke McFarlane
+	</body>
+</html>

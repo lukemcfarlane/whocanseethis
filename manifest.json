@@ -1,0 +1,12 @@
+{
+  "name": "Trineo Salesforce Enviroment Indicator 1.0",
+  "version": "1.0",
+  "background_page": "background.html",
+  "permissions": [
+    "tabs", "http://*/*"
+  ],
+  "browser_action": {
+      "name": "Salesforce Environment Indicator",
+	  "popup": "popup.html"
+  }
+}

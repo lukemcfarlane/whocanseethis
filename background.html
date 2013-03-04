@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<script>
+			var currentTabUrl = '';
+			
+			chrome.tabs.getSelected(null, function(tab) {
+			    currentTabUrl = tab.url;
+			});
+
+			chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
+				chrome.tabs.get(tabId, updateCurrentTabUrl);
+			});
+			
+			function updateCurrentTabUrl(tab) {
+				console.log('updateCurrentTabUrl called with tab:')
+				console.log(tab);
+				currentTabUrl = tab.url;
+				console.log('url is ' + currentTabUrl);
+				if(currentTabUrl.indexOf('salesforce.com') == -1 && currentTabUrl.indexOf('visual.force.com') == -1) { // not Salesforce
+					chrome.browserAction.setIcon({path:"default.png"});
+				} else if(currentTabUrl.indexOf('cs') != -1) { // sandbox
+					console.log('sandbox');
+					chrome.browserAction.setIcon({path:"sandbox.png"});
+				} else if(currentTabUrl.indexOf('na') != -1 || currentTabUrl.indexOf('ap') != -1 || currentTabUrl.indexOf('eu') != -1) { // prod
+					console.log('production');
+					chrome.browserAction.setIcon({path:"production.png"});
+				} else {
+					chrome.browserAction.setIcon({path:"default.png"});
+				}
+			}
+			
+			chrome.browserAction.setIcon({path:"default.png"});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
